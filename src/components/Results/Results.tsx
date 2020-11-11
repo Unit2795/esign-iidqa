@@ -21,23 +21,21 @@ export default function Results(
     }}>
 
         {jsonInput.passed ? (
-          <div>
+          <Zoom in={true}>
             <div>
-              <Zoom in={true} timeout={1000}>
-                <DoneIcon style={{
-                  fontSize: '250px',
-                  color: 'green'
-                }}/>
-              </Zoom>
+              <DoneIcon style={{
+                fontSize: '250px',
+                color: 'green'
+              }}/>
+              <div>
+                Verification successful!
+              </div>
             </div>
-            <div>
-              Verification successful!
-            </div>
-          </div>
+          </Zoom>
         ) : (
           <div>
             <div>
-              <Zoom in={true} timeout={1000}>
+              <Zoom in={true}>
                 <ClearIcon style={{
                   fontSize: '250px',
                   color: 'red'

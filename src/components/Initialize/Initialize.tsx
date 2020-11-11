@@ -13,13 +13,13 @@ export default function Initialize(
     }) {
   return (
     <div style={{
-      textAlign: "center"
+      textAlign: "center",
+      padding: '24px'
     }}>
       <h2>Validating your data...</h2>
       <p>{jsonInput.firstName} {jsonInput.lastName}</p>
       <p>{jsonInput.email}</p>
       <p>{jsonInput.phone}</p>
-      <p>{jsonInput.ssn === ""  ? jsonInput.licenseNum : jsonInput.ssn}</p>
       <CircularProgress />
     </div>
   );

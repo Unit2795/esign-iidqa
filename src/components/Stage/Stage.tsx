@@ -8,8 +8,10 @@ import Initialize from "../Initialize/Initialize";
 import Quiz from "../Quiz/Quiz";
 import Validate from "../Validate/Validate";
 import Results from "../Results/Results";
+import Introduction from "../Introduction/Introduction";
 
 export enum IIDQA_STAGE {
+  INTRODUCTION,
   // Gather name/phone/email
   NAME,
   // Gather SSN or Driver's License
@@ -64,7 +66,13 @@ export default function Stage() {
     </p>
   );
 
-  if (jsonInput.stage === IIDQA_STAGE.NAME)
+  if (jsonInput.stage === IIDQA_STAGE.INTRODUCTION)
+  {
+    returnItem = (
+      <Introduction/>
+    );
+  }
+  else if (jsonInput.stage === IIDQA_STAGE.NAME)
   {
     returnItem = (
       <Name setJsonInput={setJsonInput} jsonInput={jsonInput}/>
@@ -163,7 +171,7 @@ export default function Stage() {
           email: '',
           lastName: '',
           passed: false,
-          stage: 5
+          stage: IIDQA_STAGE.RESULTS
         })
       })
     }
@@ -186,7 +194,7 @@ export default function Stage() {
               email: '',
               lastName: '',
               passed: true,
-              stage: 5
+              stage: IIDQA_STAGE.RESULTS
             })
           })
         }
@@ -205,7 +213,7 @@ export default function Stage() {
               email: '',
               lastName: '',
               passed: false,
-              stage: 5
+              stage: IIDQA_STAGE.RESULTS
             })
           })
         }
@@ -245,12 +253,12 @@ export default function Stage() {
           "Type": "drivers"
       }]
     }
-    if (jsonInput.licenseNum.length >= 1)
+    if (jsonInput.ssn.length === 9)
     {
-      person["SSN"] = [{
+      person["SSN"] = {
         "Number": jsonInput.ssn,
         "Type": "ssn9"
-      }]
+      }
     }
 
 
@@ -301,7 +309,7 @@ export default function Stage() {
               questionID: data.Products[i].QuestionSet.QuestionSetId,
               questions: data.Products[i].QuestionSet.Questions,
               conversationID: data.Status.ConversationId,
-              stage: 3
+              stage: IIDQA_STAGE.QUIZ
             });
           })
         }
@@ -312,19 +320,20 @@ export default function Stage() {
   async function increment()
   {
     setJsonInput(prevState => {
-      if (prevState.stage === 0 && prevState.lastName.length >= 1 && prevState.firstName.length >= 1)
+      let newStage = prevState.stage + 1;
+      if (prevState.stage === IIDQA_STAGE.NAME && prevState.lastName.length >= 1 && prevState.firstName.length >= 1)
       {
         return({
           ...prevState,
-          stage: 1
+          stage: newStage
         })
       }
-      else if (prevState.stage === 1)
+      else if (prevState.stage === IIDQA_STAGE.COLLECT)
       {
         gatherQuestions();
         return({
           ...prevState,
-          stage: 2
+          stage: newStage
         })
       }
       else if (prevState.stage === IIDQA_STAGE.QUIZ)
@@ -341,11 +350,17 @@ export default function Stage() {
           putResponses();
           return({
             ...prevState,
-            stage: 4
+            stage: newStage
           });
         }
       }
-      return ({...prevState})
+      else
+      {
+        return ({
+          ...prevState,
+          stage: newStage
+        })
+      }
     });
   }
 
@@ -367,20 +382,20 @@ export default function Stage() {
                 }}>
                   eSign Genie
                 </span>
-            Identity Questionnaire
+            Identity Wizard
           </h1>
         </div>
         {returnItem}
       </Card>
       {
-        [2, 4, 5].includes(jsonInput.stage) ? ('') : (
+        [IIDQA_STAGE.INITIALIZE, IIDQA_STAGE.VALIDATE, IIDQA_STAGE.RESULTS].includes(jsonInput.stage) ? ('') : (
           <Button type="submit" variant={"contained"} color="primary" style={{
             margin: 'auto',
-            display: 'block'
-          }} onClick={event => increment()}>Next</Button>
+            display: 'block',
+            padding: '12px 24px'
+          }} onClick={event => increment()}>Next Step &#8594;</Button>
         )
       }
-
     </div>
   );
 }

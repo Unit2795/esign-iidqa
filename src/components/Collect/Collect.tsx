@@ -5,6 +5,7 @@ import {IIDQA_INPUT} from "../Stage/Stage";
 import TextField from "@material-ui/core/TextField";
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
+import SecuredField from "../../lib/SecuredField/SecuredField";
 
 
 export default function Collect(
@@ -25,10 +26,19 @@ export default function Collect(
 
   let returnJSX = (<p>Loading...</p>);
 
+  setJsonInput(prevState => {
+    return({
+      ...prevState,
+      ssn: "",
+      licenseNum: "",
+      licenseIssuer: ""
+    });
+  });
+
   if (select === 'ssn')
   {
     returnJSX = (
-      <TextField fullWidth label={"Social Security Number"} name={'ssn'} variant={"outlined"} style={{
+      <SecuredField fullWidth label={"Social Security Number"} name={'ssn'} type={'password'} variant={"outlined"} style={{
         margin: '24px auto'
       }} onChange={event => {
         setJsonInput(prevState => {
@@ -44,7 +54,7 @@ export default function Collect(
   {
     returnJSX = (
       <React.Fragment>
-        <TextField fullWidth label={"License Number"} name={'license-number'} variant={"outlined"} style={{
+        <SecuredField fullWidth label={"License Number"} name={'license-number'} type={'password'} variant={"outlined"} style={{
           margin: '24px auto'
         }} onChange={event => {
           setJsonInput(prevState => {
@@ -99,7 +109,6 @@ export default function Collect(
     );
   }*/
 
-  let formRef = React.useRef<any>();
 
   return (
     <div style={{
