@@ -26,15 +26,6 @@ export default function Collect(
 
   let returnJSX = (<p>Loading...</p>);
 
-  setJsonInput(prevState => {
-    return({
-      ...prevState,
-      ssn: "",
-      licenseNum: "",
-      licenseIssuer: ""
-    });
-  });
-
   if (select === 'ssn')
   {
     returnJSX = (

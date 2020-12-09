@@ -134,7 +134,7 @@ export default function Stage() {
           "Locale": "en_US",
           "Venue": "online"
         },
-        "Answers":       {
+        "Answers": {
           "QuestionSetId": jsonInput.questionID,
           "Questions": responses
         }
@@ -156,6 +156,7 @@ export default function Stage() {
 
     let data = JSON.parse(parsable);
 
+    // If for any reason the overall transaction fails, clear state and set pass to false.
     if (data.Status.TransactionStatus !== "passed")
     {
       setJsonInput(prevState => {
@@ -177,8 +178,10 @@ export default function Stage() {
     }
     else
     {
+      // Iterate over the products
       for (let x = 0; x < data.Products.length; x++)
       {
+        // Find IIDQA and evaluate its status.
         if (data.Products[x].ProductType === "IIDQA" && data.Products[x].ProductStatus === "pass")
         {
           setJsonInput(prevState => {
@@ -221,6 +224,9 @@ export default function Stage() {
     }
   }
 
+  /*
+    Send basic initializing information
+  */
   async function gatherQuestions() {
     let person: any = {
       "Context": "primary"
@@ -267,7 +273,6 @@ export default function Stage() {
       "Settings":
         {
           "Mode": "testing",
-          "SimulationType": "random",
           "Reference": "string",
           "Locale": "en_US",
           "Venue": "online"
